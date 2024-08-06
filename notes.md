@@ -94,3 +94,16 @@ type ContrivedProps = {
     optionalProp?: string;
 }
 ```
+
+
+# Typing Children
+
+1. `React.ReactNode`
+
+
+# Typing Styling
+
+1. `React.CSSProperties`
+
+
+# useState
