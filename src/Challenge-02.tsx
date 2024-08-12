@@ -7,9 +7,6 @@ const Counter = () => {
 
     const addDouble = () => setCount(count * 2);
 
-    console.log(count);
-    console.log(inputV);
-
     const handleInput = (event: ChangeEvent<HTMLInputElement>) => setInputV(Number(event.target.value));
     const handleSubmit = () => {
         event?.preventDefault();

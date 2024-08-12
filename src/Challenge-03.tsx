@@ -9,7 +9,6 @@ type DogFactType = {
   fact: string;
 };
 
-console.log(shuffle(data));
 
 const fetchDogFacts = (n: number) => {
   return Promise.resolve(data).then((facts) => shuffle(facts).slice(0, n));

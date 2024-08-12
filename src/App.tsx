@@ -1,57 +1,137 @@
-import { useReducer } from "react";
+import { useReducer, Dispatch } from "react";
 
-interface State {
-  count: number;
-  error: string | null;
-}
+type PizzaData = {
+  numberOfPeople: number;
+  slicesPerPerson: number;
+  slicesPerPie: number;
+};
 
-interface Action {
-  type: 'increment' | 'decrement';
-}
+type PizzaState = PizzaData & { pizzasNeeded: number };
 
-function reducer (state: State, action: Action) {
-  const {type} = action;
+type PizzaAction = {
+  type:
+    | "UPDATE_NUMBER_OF_PEOPLE"
+    | "UPDATE_SLICES_PER_PERSON"
+    | "UPDATE_SLICES_PER_PIE";
+  payload: number;
+};
 
-  switch (type) {
-    case 'increment': {
-      const newCount = state.count + 1;
-      const hasError = newCount > 5;
+const calculatePizzasNeeded = ({
+  numberOfPeople,
+  slicesPerPerson,
+  slicesPerPie,
+}: PizzaData): number => {
+  return Math.ceil((numberOfPeople * slicesPerPerson) / slicesPerPie);
+};
 
-      return {
+const addPizzasNeededToPizzaData = (data: PizzaData): PizzaState => {
+  return { ...data, pizzasNeeded: calculatePizzasNeeded(data) };
+};
+
+const initialState: PizzaState = {
+  numberOfPeople: 8,
+  slicesPerPerson: 2,
+  slicesPerPie: 8,
+  pizzasNeeded: 2,
+};
+
+const reducer = (state: PizzaState, action: PizzaAction) => {
+  switch (action.type) {
+    case "UPDATE_NUMBER_OF_PEOPLE":
+      return addPizzasNeededToPizzaData({
         ...state,
-        count: hasError ? state.count : newCount,
-        error: hasError ? 'Maximum reached' : null,
-      }
-    }
-
-    case 'decrement': {
-      const newCount = state.count - 1;
-      const hasError = newCount < 0;
-      return {
+        numberOfPeople: action.payload,
+      });
+    case "UPDATE_SLICES_PER_PERSON":
+      return addPizzasNeededToPizzaData({
         ...state,
-        count: hasError ? state.count : newCount,
-        error: hasError ? 'Minimum reached' : null,
-      }
-    }
+        slicesPerPerson: action.payload,
+      });
+    case "UPDATE_SLICES_PER_PIE":
+      return addPizzasNeededToPizzaData({
+        ...state,
+        slicesPerPie: action.payload,
+      });
     default:
       return state;
   }
-}
+};
 
 const App = () => {
-  const [state, dispatch] = useReducer(reducer, {
-    count: 0,
-    error: null,
-  });
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <div className="app">
-      <h3>Count: {state.count}</h3>
-      {state.error && <div>{state.error}</div>}
-      <button onClick={() => dispatch({type: 'increment'})}>increment</button>
-      <button onClick={() => dispatch({type: 'decrement'})}>decrement</button>
-    </div>
-  )
-}
+    <main>
+      <header>
+        <h1>Pizza Calculator</h1>
+      </header>
 
-export default App
+      <Calculation count={state.pizzasNeeded} />
+      <Calculator state={state} dispatch={dispatch} />
+    </main>
+  );
+};
+
+const Calculation = ({ count }: { count: any }) => {
+  return (
+    <section>
+      <p>{count}</p>
+      <p>Pizzas Needed</p>
+    </section>
+  );
+};
+
+const Calculator = ({
+  dispatch,
+  state,
+}: {
+  state: PizzaState;
+  dispatch: Dispatch<PizzaAction>;
+}) => {
+  return (
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+      }}
+    >
+      <label htmlFor="">Number of People</label>
+      <input
+        type="number"
+        value={state.numberOfPeople}
+        onChange={(event) =>
+          dispatch({
+            type: "UPDATE_NUMBER_OF_PEOPLE",
+            payload: +event.target.value,
+          })
+        }
+      />
+
+      <label htmlFor="">Slice Per Person</label>
+      <input
+        type="number"
+        value={state.slicesPerPerson}
+        onChange={(event) =>
+          dispatch({
+            type: "UPDATE_SLICES_PER_PERSON",
+            payload: +event.target.value,
+          })
+        }
+      />
+
+      <label htmlFor="">Slices Per Pie</label>
+      <input
+        type="number"
+        value={state.slicesPerPie}
+        onChange={(event) =>
+          dispatch({
+            type: "UPDATE_SLICES_PER_PIE",
+            payload: +event.target.value,
+          })
+        }
+      />
+    </form>
+  );
+};
+
+
+export default App;
