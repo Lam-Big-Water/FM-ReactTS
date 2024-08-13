@@ -8,12 +8,11 @@ type PizzaData = {
 
 type PizzaState = PizzaData & { pizzasNeeded: number };
 
-type PizzaAction = {
-  type:
-    | "UPDATE_NUMBER_OF_PEOPLE"
-    | "UPDATE_SLICES_PER_PERSON"
-    | "UPDATE_SLICES_PER_PIE";
-  payload: number;
+const initialState: PizzaState = {
+  numberOfPeople: 8,
+  slicesPerPerson: 2,
+  slicesPerPie: 8,
+  pizzasNeeded: 2,
 };
 
 const calculatePizzasNeeded = ({
@@ -24,15 +23,14 @@ const calculatePizzasNeeded = ({
   return Math.ceil((numberOfPeople * slicesPerPerson) / slicesPerPie);
 };
 
-const addPizzasNeededToPizzaData = (data: PizzaData): PizzaState => {
-  return { ...data, pizzasNeeded: calculatePizzasNeeded(data) };
-};
 
-const initialState: PizzaState = {
-  numberOfPeople: 8,
-  slicesPerPerson: 2,
-  slicesPerPie: 8,
-  pizzasNeeded: 2,
+
+type PizzaAction = {
+  type:
+    | "UPDATE_NUMBER_OF_PEOPLE"
+    | "UPDATE_SLICES_PER_PERSON"
+    | "UPDATE_SLICES_PER_PIE";
+  payload: number;
 };
 
 const reducer = (state: PizzaState, action: PizzaAction) => {
@@ -55,6 +53,10 @@ const reducer = (state: PizzaState, action: PizzaAction) => {
     default:
       return state;
   }
+};
+
+const addPizzasNeededToPizzaData = (data: PizzaData): PizzaState => {
+  return { ...data, pizzasNeeded: calculatePizzasNeeded(data) };
 };
 
 const App = () => {
