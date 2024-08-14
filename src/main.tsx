@@ -5,9 +5,10 @@ import App from './App.tsx'
 // import Challenge from './Challenge-02.tsx';
 // import Challenge from './Challenge-03.tsx'
 // import Challenge from './Challenge-04.tsx'
+import Challenge from './Challenge-06.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <App />
+    <Challenge />
   </React.StrictMode>,
 )
