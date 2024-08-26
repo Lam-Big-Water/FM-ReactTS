@@ -1,9 +1,14 @@
+import {RGBColorType} from '../reducer';
+import {toRGB} from '../utility';
 
-const ColorSwatch = () => {
+const ColorSwatch = (rgb: RGBColorType) => {
+  
+  const color = toRGB(rgb);
+
   return (
     <div 
     className="color-swatch"
-    style={{}}
+    style={{backgroundColor: color}}
     >    
     </div>
   )
